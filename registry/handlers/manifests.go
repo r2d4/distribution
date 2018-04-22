@@ -67,16 +67,19 @@ type manifestHandler struct {
 // GetManifest fetches the image manifest from the storage backend, if it exists.
 func (imh *manifestHandler) GetManifest(w http.ResponseWriter, r *http.Request) {
 	dcontext.GetLogger(imh).Debug("GetImageManifest")
+
 	manifests, err := imh.Repository.Manifests(imh)
 	if err != nil {
 		imh.Errors = append(imh.Errors, err)
 		return
 	}
-
 	var manifest distribution.Manifest
 	if imh.Tag != "" {
+		fmt.Println("before")
 		tags := imh.Repository.Tags(imh)
+		fmt.Println("tags", tags)
 		desc, err := tags.Get(imh, imh.Tag)
+		fmt.Println("desc", desc)
 		if err != nil {
 			if _, ok := err.(distribution.ErrTagUnknown); ok {
 				imh.Errors = append(imh.Errors, v2.ErrorCodeManifestUnknown.WithDetail(err))
@@ -97,6 +100,7 @@ func (imh *manifestHandler) GetManifest(w http.ResponseWriter, r *http.Request) 
 	if imh.Tag != "" {
 		options = append(options, distribution.WithTag(imh.Tag))
 	}
+	fmt.Println("hi")
 	manifest, err = manifests.Get(imh, imh.Digest, options...)
 	if err != nil {
 		if _, ok := err.(distribution.ErrManifestUnknownRevision); ok {

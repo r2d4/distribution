@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 	"path"
 
 	"github.com/docker/distribution"
@@ -94,6 +95,7 @@ func (ts *tagStore) Tag(ctx context.Context, tag string, desc distribution.Descr
 
 // resolve the current revision for name and tag.
 func (ts *tagStore) Get(ctx context.Context, tag string) (distribution.Descriptor, error) {
+	fmt.Println("tag store get ", tag)
 	currentPath, err := pathFor(manifestTagCurrentPathSpec{
 		name: ts.repository.Named().Name(),
 		tag:  tag,

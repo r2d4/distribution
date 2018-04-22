@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"github.com/docker/distribution"
@@ -15,6 +16,7 @@ func tagsDispatcher(ctx *Context, r *http.Request) http.Handler {
 	tagsHandler := &tagsHandler{
 		Context: ctx,
 	}
+	fmt.Println("tags dispatcher")
 
 	return handlers.MethodHandler{
 		"GET": http.HandlerFunc(tagsHandler.GetTags),
@@ -34,7 +36,7 @@ type tagsAPIResponse struct {
 // GetTags returns a json list of tags for a specific image name.
 func (th *tagsHandler) GetTags(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
-
+	fmt.Println("tags")
 	tagService := th.Repository.Tags(th)
 	tags, err := tagService.All(th)
 	if err != nil {

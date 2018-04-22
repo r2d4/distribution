@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/docker/distribution"
 	dcontext "github.com/docker/distribution/context"
 	"github.com/docker/distribution/manifest"
@@ -98,7 +99,10 @@ func (ms *manifestStore) Get(ctx context.Context, dgst digest.Digest, options ..
 		// This can be an image manifest or a manifest list
 		switch versioned.MediaType {
 		case schema2.MediaTypeManifest:
-			return ms.schema2Handler.Unmarshal(ctx, dgst, content)
+			fmt.Println("v2 manifest")
+			m, err := ms.schema2Handler.Unmarshal(ctx, dgst, content)
+			spew.Dump(m)
+			return m, err
 		case manifestlist.MediaTypeManifestList:
 			return ms.manifestListHandler.Unmarshal(ctx, dgst, content)
 		default:
